@@ -1,0 +1,209 @@
+html, body { 
+  margin:0; 
+  padding:0; 
+  height:100%; 
+  background-color: #ddddff;
+  background-image: url("images/CloudyDay.png");
+}
+
+/*Text colors and style*/
+.good{background-color: #96ff96;padding-left:.5em;padding-right:.5em;border-radius:.5em;}
+.bad{background-color: #ff9696;padding-left:.5em;padding-right:.5em;border-radius:.5em;}
+.yeild{background-color: #ffff94;padding-left:.5em;padding-right:.5em;border-radius:.5em;}
+.off{background-color: #969696;padding-left:.5em;padding-right:.5em;border-radius:.5em;}
+.hilight{background-color:ffeeee;}
+.complete{text-decoration: line-through;}
+
+/*GUI and Icons*/
+.nav-icon{width:.8em;
+  height:.8em;
+  border-radius:.6em;
+  padding:.5em;
+  vertical-align: middle;}
+.nav-icon-sq{width:.8em;
+  height:.8em;
+  border-radius:.6em;
+  padding:.5em;
+  vertical-align: middle;}
+.nav-icon:hover{background-color: #eaeaff;}
+.nav-icon-sq:hover{background-color: #eaeaff;}
+.rot45d{transform: rotate(45deg);}
+.rot315d{transform: rotate(315deg);}
+.icon{
+  width:1em;
+  height:1em;
+}
+.redIcon{
+  vertical-align: middle;
+  filter: invert(1) brightness(50%) sepia(100%) saturate(10000%);
+}
+.greenIcon{
+  vertical-align: middle;
+  filter: invert(1) brightness(50%) sepia(100%) saturate(10000%) hue-rotate(90deg);
+}
+.orangeIcon{
+  vertical-align: middle;
+  filter: invert(1) brightness(50%) sepia(100%) saturate(1000%) hue-rotate(10deg) saturate(1000%) ;
+}
+.yellowIcon{
+  vertical-align: middle;
+  filter: invert(1) brightness(50%) sepia(100%) saturate(100%) hue-rotate(10deg) saturate(8000%) ;
+}
+
+
+/*Search*/
+#ViewMoreSearchButton{padding-left:.4em;padding-right:.2em;}
+#search{
+	background-color: #eaeaff;
+	padding:.8em;
+	border-radius:.8em;
+	width:25em;float:left;}
+#in0{clear:left;}
+
+/*Main*/
+#main{
+	width:calc(100% - 21em);
+	
+	float:left;
+	
+}
+	
+/*ViewPane*/
+.viewpane{	
+	width:100%;
+	background-color: #ffffff;
+	display:none;
+	padding:.8em;
+	border-radius:.8em;
+	clear:left;
+	height:100%;
+	overflow: auto;
+	}
+.viewpane h1{display: inline-block;}
+	
+.low{width:100%;}
+.viewnav{
+	width:100%;
+	background-color: #ffffff;
+}
+.max{
+  box-shadow: 2em 2em 10em grey;
+  position: fixed;
+   /*position: fixed; /* or absolute */
+  top: 50%;
+  left: 50%;
+  
+  min-width:50%;
+  min-height:50%;
+  width:min-content;
+  height:min-content;
+  /*transform: translate(-25%, -25%);*/
+  transform: translate(-50%, -50%);
+  margin-right:5em;
+}
+.ADUserTabLink{
+	background-color:#eaeaff;
+	border-top-right-radius:.6em;
+	border-top-left-radius:.6em;
+	padding:.3em;
+	padding-top:.5em;
+}
+/*Stat*/
+#stat{
+	position:fixed;bottom: 0;right:0;background-color:#999999;
+	padding-left:.5em;padding-right:.5em;padding-top:.5em;
+	border-top-left-radius:.5em;
+	z-index:5;
+	}
+
+/*Side Navigation*/
+#nav1{
+	margin-right:20em;
+	min-width:5em;
+float:top;
+  max-height: 100%;
+  background-color: #eaeaff;
+	border-radius:.8em;
+	}
+	
+#nav1 hr{width:.5em; margin: .5px; display: inline-block;}
+#nav1 li{display: inline-block; padding:.5em;}
+
+#Nav1Tickets{display: inline-block;}
+
+
+#nav1sub0{width:10em;}
+#navbottom{  
+  position: fixed;
+ 
+  right: 0;
+  bottom: 0;}
+form, table {
+     display:inline;
+     margin:0px;
+     padding:0px;
+}
+
+#tasklog{
+	width:18em;
+	height:100%;
+	position: fixed;
+  right: 0;
+  top: 0;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  max-height: 100%;
+  background-color: #eaeaff;
+	border-radius:.8em;
+	font-family: "Consolas";
+
+	display:flex; 
+	flex-direction:column-reverse;
+	padding-left:.5em;padding-right:.5em;
+	}
+
+#viewGroups0{clear:left;float:left;width:40%;background-color: #aaaaff;padding-left:.5em;padding-right:.5em;border-radius:.5em;display:none;}
+#viewGroups1{float:left;width:40%;background-color: #aaaaff;padding-left:.5em;padding-right:.5em;border-radius:.5em;display:none;}
+
+#viewTickettable{float:left;max-width:50%;height:100%;}
+#viewTicketright{float:left;max-width:40%;}
+#Notes{clear:left;}
+#Notes pre{
+	white-space: pre-wrap;
+}
+
+.popmenu{
+	position: absolute;
+    border: solid 1px #fc0;
+	background-color:#ffffff;
+}
+.popmenunav{
+	width:100%;height:1em;
+}
+.popcolumn{
+	padding:1em;
+	float:left;
+}
+.iconblock img{
+	width:5em;
+	height:5em;
+}
+.iconblock{
+	float:left;
+	width:7em;
+	height:9em;
+	padding:1em;
+}
+
+.CBItem{
+	background-color: #eaeaff;
+	padding-left:.5em;padding-right:.5em;border-radius:.5em;
+}
+.CBIDX{
+	background-color: #aaaaff;
+	padding-left:.5em;padding-right:.5em;border-radius:.5em;
+}
+
+.CBIDXThis{
+	background-color: #ffe9a8;
+}
