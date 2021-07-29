@@ -1,6 +1,5 @@
 	//imports
 window.$ = window.jQuery = require('././jquery-3.4.1.min.js');
-window.$ = window.jQuery = require('././htmx.min.js');
 
 const exec = require('child_process').exec;
 const fs = require('fs');
@@ -9,6 +8,24 @@ const electron = require('electron');
 const { clipboard } = require('electron')
 const dialog = electron.remote.dialog;
 
+async function GetJSONData(path,arg){
+	r = {}
+	await $.ajax({type : 'GET',
+		url : "http://127.0.0.1:8000"+path+"?format=json"+arg,
+		success : function(response) {
+			r = response;
+			//console.log(response);
+			return response;
+		},
+		error : function(xhr, status, error) {
+			//var err = eval("(" + xhr.responseText + ")");
+			console.log(xhr);
+			//Stat('Error: '+err);
+			throw err; 
+		}
+	})
+	return r;
+}
 
 //Search Functions for Data
 function searchJTtoGroups(row,rownumber,search,lastvar){
@@ -99,15 +116,28 @@ function searchData(){
 	var search = $("#in0").val().toLowerCase();
 	if (search != ''){
 		CurrentData = $("#SearchData").val();
-		var lastvar = '';
-		window[CurrentData].forEach(function(row,rownumber){
-			lastvar = window['search'+CurrentData](row,rownumber,search,lastvar);
+		
+		//var lastvar = '';
+		
+		//users search
+		GetJSONData('/Users','&s='+search)
+		.then(data => {
+			data = JSON.parse(data);
+			console.log(data)
+			data.forEach(function(row,rownumber){
+				show = '<br/><a href="#" onclick="'+rownumber+'">'+row.SamAccountName+'</a>';
+				$("#col0").append(show);
+				$("#col1").append("<br/>"+row.displayName);
+				$("#col2").append("<br/>"+row.telephoneNumber);
 		});
+			
+		});
+		
+		//window[CurrentData].forEach(function(row,rownumber){
+		//	lastvar = window['search'+CurrentData](row,rownumber,search,lastvar);
+		//});
 	}
-	//Extend Search to include tickets
-	if (search.length >= 5 && !isNaN(search) ){
-		$("#col0").append('</br><a href="#" onclick="OpenTicket(\''+search+'\')">Ticket: '+search+'</a>');
-	}
+
 }
 //  Extra Search Features
 function ViewMoreSearch(){
