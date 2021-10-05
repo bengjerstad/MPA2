@@ -29,6 +29,10 @@ npm install electron --save-dev
 pip install fastapi
 pip install uvicorn[standard]
 
+2. Install other python modules
+### json2html
+pip install json2html
+
 ##Why 2
 MPA is a re-write of my MPA project to use FastAPI as the core logic and either MPAGui(electron) or python MPA.py as the front end. 
 In MPA, MPAGui had all of the core logic written in JavaScript and the python MPA.py was left with little to work with since the core logic was all in the Javascript Modules. In MPA2, all core logic is going to be put into fastAPI. 
