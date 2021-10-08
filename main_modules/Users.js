@@ -73,6 +73,13 @@ function showUser(sam){
 function UnlockAccount(sam){
 	
 }
+function showLockouts(){
+	GetJSONData('/Users/Lockout')
+	.then(data => {
+		data = JSON.parse(data)
+		console.log(data);
+	});
+}
 
-module.exports = {test,showUser,UnlockAccount};
+module.exports = {test,showUser,UnlockAccount,showLockouts};
 

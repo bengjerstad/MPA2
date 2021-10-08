@@ -54,10 +54,8 @@ async def usersLockout(sam:str='',format:str='json'):
 async def usersLockout(s:str='',sam:str='',format:str='json'):
 	cmd = 'powershell "Search-ADAccount -Locked | select SamAccountName"';
 	o = subprocess.run(cmd, capture_output=True)
-	if o.stderr.decode("utf-8") == '':
-		return "No Users are Locked Out"
-	else:
-		return o.stderr.decode("utf-8")
+	data = o.stdout.decode("utf-8")
+	return rtformat(data,format,'cmdstring')
 	
 @app.get("/Computers")
 async def computers():

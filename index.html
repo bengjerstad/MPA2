@@ -13,7 +13,10 @@
 <body>
 <div id="nav1">
 <ul style="list-style-type: none;">
-<li hx-get="http://127.0.0.1:8000/Users/Lockout?format=html" hx-trigger="click" hx-target="#LockedOutUsers" hx-params="*"/><img class="icon iconred" src="images/locked-padlock.svg"/></li>
+
+<!--<li hx-get="http://127.0.0.1:8000/Users/Lockout?format=html" hx-trigger="click, load" hx-target="#LockedOutUsers" hx-params="*"/><img class="icon iconred" src="images/locked-padlock.svg"/></li>
+-->
+<a href="#" onclick="Users.showLockouts();return false;"><img class="icon iconred" src="images/locked-padlock.svg"/></a>
 </ul>
 <div id='nav1sub0'></div>
 
