@@ -111,7 +111,7 @@ function searchData(){
 			data = JSON.parse(data);
 			//console.log(data)
 			data.forEach(function(row,rownumber){
-				show = '<br/><a href="#" onclick="showUser(\''+row.SamAccountName+'\');return false;">'+row.SamAccountName+'</a>';
+				show = '<br/><a href="#" onclick="Users.showUser(\''+row.SamAccountName+'\');return false;">'+row.SamAccountName+'</a>';
 				$("#col0").append(show);
 				$("#col1").append("<br/>"+row.displayName);
 				$("#col2").append("<br/>"+row.telephoneNumber);
@@ -125,14 +125,7 @@ function searchData(){
 	}
 
 }
-function showUser(sam){
-		GetJSONData('/Users','&sam='+sam)
-		.then(data => {
-			data = JSON.parse(data);
-			console.log(data)
 
-		});
-}
 
 //  Extra Search Features
 function ViewMoreSearch(){
@@ -243,4 +236,4 @@ clipboard['lastE'] =  function(x){
 	clipboard.writeText(x.previousSibling.innerText);
 }
 
-Users.show();
+

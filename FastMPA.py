@@ -24,8 +24,9 @@ async def users(s:str='',sam:str='',format:str='json'):
 		searchr2 = ADUsers[ADUsers.telephoneNumber.str.lower().str.contains(s, na=False)]
 		return rtformat(pd.concat([searchr0,searchr1,searchr2])[['SamAccountName','displayName','telephoneNumber']],format)
 	if sam != '':
+		sam = sam.lower()
 		searchr0 = ADUsers[ADUsers.sam == sam]
-		return rtformat(searchr0.to_json(orient="records"),format)
+		return searchr0.to_json(orient="records")
 	
 #load user data
 ADUsers = pd.read_csv(datapath+'ADUsers.csv')
