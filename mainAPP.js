@@ -8,6 +8,9 @@ const electron = require('electron');
 const { clipboard } = require('electron')
 const dialog = electron.remote.dialog;
 
+//  Modules
+const Users = require("./main_modules/Users");
+
 async function GetJSONData(path,arg){
 	r = {}
 	await $.ajax({type : 'GET',
@@ -27,27 +30,10 @@ async function GetJSONData(path,arg){
 	return r;
 }
 
-//Search Functions for Data
-function searchJTtoGroups(row,rownumber,search,lastvar){
-	if (row.Title.toLowerCase().includes(search) && row.Title != lastvar){
-		$("#col0").append('<br/>'+row.Title+'');
-		return row.Title;
-	}
-	else{
-		return lastvar;
-	}
-}
-function searchApps(row,rownumber,search,lastvar){
-	if (row.Shortcut.toLowerCase().includes(search)){
-		$("#col0").append('<br/><a href="#" onclick="ShowMD(\''+row.Root+'.md\',\'Applications\')">'+row.Root+'</a>');
-		$("#col1").append("<br/>"+row.Shortcut);
-	}
-}
 
 //globals
-//  Modules Global
-//var Modules = [];
-var Modules = {};
+
+
 var API = {}
 
 //DateTimeGlobals
@@ -256,3 +242,5 @@ function clearallinputs(Section){
 clipboard['lastE'] =  function(x){
 	clipboard.writeText(x.previousSibling.innerText);
 }
+
+Users.show();
