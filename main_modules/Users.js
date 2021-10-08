@@ -6,7 +6,23 @@ function showUser(sam){
 			data = JSON.parse(data);
 			console.log(data)
 			$("#UserPane").show("fast");
-			$("#UserPane").html(JSON.stringify(data));
+			$("#UserLeft").html("");
+			Object.keys(data[0]).forEach(key => {
+				$("#UserPane").append("<br/>"+key+" : "+data[0][key]);
+			});
+			
+		});
+		GetJSONData('/Users/Live','&sam='+sam)
+		.then(data => {
+			//data = JSON.parse(data);
+			console.log(data)
+			$("#UserPane").show("fast");
+			$("#UserRight").html(data);
+			//$("#UserRight").html("");
+			//Object.keys(data[0]).forEach(key => {
+			//	$("#UserPane").append("<br/>"+key+" : "+data[0][key]);
+			//});
+			
 		});
 }
 

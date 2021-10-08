@@ -34,6 +34,18 @@ ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
 ADGroups = pd.read_csv(datapath+'ADGroups.csv')
 PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
 
+@app.get("/Users/Live")
+async def usersLockout(sam:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"';
+		o = subprocess.run(cmd, capture_output=True)
+		return o.stdout.decode("utf-8")
+		#if o.stderr.decode("utf-8") == '':
+		#	return "No Data"
+		#else:
+		#	return o.stderr.decode("utf-8")
+		
+
 @app.get("/Users/Lockout")
 async def usersLockout(s:str='',sam:str='',format:str='json'):
 	cmd = 'powershell "Search-ADAccount -Locked | select SamAccountName"';
