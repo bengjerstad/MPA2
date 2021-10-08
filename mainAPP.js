@@ -114,7 +114,6 @@ function searchData(){
 				show = '<br/><a href="#" onclick="Users.showUser(\''+row.SamAccountName+'\');return false;">'+row.SamAccountName+'</a>';
 				$("#col0").append(show);
 				$("#col1").append("<br/>"+row.displayName);
-				$("#col2").append("<br/>"+row.telephoneNumber);
 		});
 			
 		});
@@ -161,7 +160,7 @@ function ClickFirstOption(){
 function Stat(msg){
 	today = new Date();
 	logmsg = msg+' '+today.toLocaleTimeString()+"\r\n";
-	fs.appendFile('statlog.log', logmsg, function (err) {if (err) {console.log(err)}});	 
+	//fs.appendFile('statlog.log', logmsg, function (err) {if (err) {console.log(err)}});	 
 	$("#tasklog").prepend("<br/>"+msg);
 }
 function MaxStat(){ 

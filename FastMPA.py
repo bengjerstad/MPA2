@@ -17,12 +17,19 @@ async def root():
 @app.get("/Users")
 async def users(s:str='',sam:str='',format:str='json'):
 	if s == '' and sam == '':
-		return rtformat(ADUsers[['SamAccountName','displayName','telephoneNumber']],format)
+		return rtformat(ADUsers[['SamAccountName','displayName']],format,"pd")
 	if s != '':
 		searchr0 = ADUsers[ADUsers.SamAccountName.str.lower().str.contains(s, na=False)]
 		searchr1 = ADUsers[ADUsers.displayName.str.lower().str.contains(s, na=False)]
 		searchr2 = ADUsers[ADUsers.telephoneNumber.str.lower().str.contains(s, na=False)]
-		return rtformat(pd.concat([searchr0,searchr1,searchr2])[['SamAccountName','displayName','telephoneNumber']],format)
+		concatsearch = pd.concat([searchr0,searchr1,searchr2])[['SamAccountName','displayName','Enabled','distinguishedname']].drop_duplicates()
+		#hide inactive accounts
+		concatsearch = concatsearch[concatsearch['Enabled'] == True]
+		#filter on distinguishedname
+		concatsearch = concatsearch[concatsearch['distinguishedname'].str.contains("OU=LWC")]
+		concatsearch = concatsearch[~concatsearch['distinguishedname'].str.contains("ADMIN UTILITY")]
+		
+		return rtformat(concatsearch.head(48),format,"pd")
 	if sam != '':
 		sam = sam.lower()
 		searchr0 = ADUsers[ADUsers.sam == sam]
@@ -39,11 +46,8 @@ async def usersLockout(sam:str='',format:str='json'):
 	if sam != '':
 		cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"';
 		o = subprocess.run(cmd, capture_output=True)
-		return o.stdout.decode("utf-8")
-		#if o.stderr.decode("utf-8") == '':
-		#	return "No Data"
-		#else:
-		#	return o.stderr.decode("utf-8")
+		data = o.stdout.decode("utf-8")
+		return rtformat(data,format,'kvstring')
 		
 
 @app.get("/Users/Lockout")
@@ -91,11 +95,25 @@ async def newusers():
 #load NewUsers Data
 Markdowndatapath = 'C:\\Users\\bgjerstad\\Documents\\KB\\'
 
-def rtformat(output,format):
-	if (format == "html"):
-		return output.to_html(index=False).replace('\n', "") 
-	if (format == "table"):
-		return json2html.convert(json.loads(output.to_json(orient="records")))
-	if (format == "json"):
-		return output.to_json(orient="records")
-	return output
+def rtformat(input,formatout,formatin):
+	if formatin == "pd":
+		if (formatout == "html"):
+			return input.to_html(index=False).replace('\n', "") 
+		if (formatout == "table"):
+			return json2html.convert(json.loads(input.to_json(orient="records")))
+		if (formatout == "json"):
+			return input.to_json(orient="records")
+	if formatin == "kvstring":
+		input = input.splitlines()
+		output = {}
+		for line in input:
+			if ":" in line:
+				keyvalue = line.split(":",1)
+				key,value = keyvalue[0].strip(),keyvalue[1].strip()
+				output[key] = value
+		if (formatout == "json"):
+			return json.dumps(output)
+	if formatin == "cmdstring":
+		input = input.splitlines()
+		return json.dumps(input)
+
