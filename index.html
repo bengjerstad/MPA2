@@ -16,7 +16,12 @@
 
 <!--<li hx-get="http://127.0.0.1:8000/Users/Lockout?format=html" hx-trigger="click, load" hx-target="#LockedOutUsers" hx-params="*"/><img class="icon iconred" src="images/locked-padlock.svg"/></li>
 -->
-<a href="#" onclick="Users.showLockouts();return false;"><img class="icon iconred" src="images/locked-padlock.svg"/></a>
+<li><a href="#" onclick="Users.showLockouts();return false;"><img class="icon iconred" src="images/locked-padlock.svg"/></a></li>
+<li><a href="#" onclick="KB.LoadKBList('Issues');return false;">Issues</a></li>
+<li><a href="#" onclick="KB.LoadKBList('Applications');return false;">Applications</a></li>
+<li><a href="#" onclick="KB.LoadKBList('Jobs');return false;">Jobs</a></li>
+<li><a href="#" onclick="KB.LoadKBList('HowTos');return false;">HowTos</a></li>
+<li><a href="#" onclick="KB.LoadKBList('Solutions');return false;">Solutions</a></li>
 </ul>
 <div id='nav1sub0'></div>
 

@@ -83,7 +83,7 @@ function UnlockAccount(sam){
 	
 }
 function showLockouts(){
-	GetJSONData('/Users/Lockout')
+	GetJSONData('/Users/Lockout','')
 	.then(data => {
 		data = JSON.parse(data)
 		if (data.length == 0){

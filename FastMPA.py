@@ -5,6 +5,7 @@ import json
 import os
 import subprocess
 import sys
+from markdown import markdown
 
 app = FastAPI()
 
@@ -88,13 +89,19 @@ async def orders():
 Orders = pd.read_csv(datapath+'Orders.csv')	
 	
 @app.get("/KB")
-async def KB():
-    return {"message": "KB"}
+async def KB(s:str='',f:str=''):
+	if f == '':
+		return os.listdir(KBpath+'\\'+s)
+	else:
+		with open(KBpath+'\\'+s+'\\'+f, 'r') as f:
+			text = f.read()
+			html = markdown(text)
+		return html
+
 	
 #load KB data
 
 
-	
 @app.get("/Newusers")
 async def newusers():
     return {"message": "Newusers"}

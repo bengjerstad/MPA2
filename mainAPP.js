@@ -30,7 +30,24 @@ async function GetJSONData(path,arg){
 	})
 	return r;
 }
-
+async function GetData(path,arg){
+	r = {}
+	await $.ajax({type : 'GET',
+		url : "http://127.0.0.1:8000"+path+"?"+arg,
+		success : function(response) {
+			r = response;
+			//console.log(response);
+			return response;
+		},
+		error : function(xhr, status, error) {
+			//var err = eval("(" + xhr.responseText + ")");
+			console.log(xhr);
+			//Stat('Error: '+err);
+			throw err; 
+		}
+	})
+	return r;
+}
 
 //globals
 
