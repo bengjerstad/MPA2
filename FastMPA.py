@@ -9,6 +9,7 @@ import sys
 app = FastAPI()
 
 datapath = 'C:\\Users\\bgjerstad\\Documents\\Data\\'
+KBpath = 'C:\\Users\\bgjerstad\\Documents\\KB\\'
 
 @app.get("/")
 async def root():
@@ -52,10 +53,16 @@ async def usersLockout(sam:str='',format:str='json'):
 
 @app.get("/Users/Lockout")
 async def usersLockout(s:str='',sam:str='',format:str='json'):
-	cmd = 'powershell "Search-ADAccount -Locked | select SamAccountName"';
-	o = subprocess.run(cmd, capture_output=True)
-	data = o.stdout.decode("utf-8")
-	return rtformat(data,format,'cmdstring')
+	if sam == '':
+		cmd = 'powershell "Search-ADAccount -Locked | select SamAccountName"';
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return rtformat(data,format,'cmdstring')
+	if sam != '':
+		cmd = 'powershell "Unlock-ADAccount -Identity '+sam+'"';
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return rtformat(data,format,'cmdstring')
 	
 @app.get("/Computers")
 async def computers():
@@ -85,6 +92,8 @@ async def KB():
     return {"message": "KB"}
 	
 #load KB data
+
+
 	
 @app.get("/Newusers")
 async def newusers():

@@ -10,6 +10,7 @@ const dialog = electron.remote.dialog;
 
 //  Modules
 const Users = require("./main_modules/Users");
+const KB = require("./main_modules/KB");
 
 async function GetJSONData(path,arg){
 	r = {}

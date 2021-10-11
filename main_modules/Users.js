@@ -1,5 +1,3 @@
-function test(){console.log("R");}
-
 function showUser(sam){
 		$("#UserLeft").html("");
 		$("#UserRight").html("");
@@ -25,7 +23,7 @@ function showUser(sam){
 				else {
 					if (data[0][key] != null){
 						$("#UserLeft").append("<br/>"+key+": <span>"+data[0][key]+"</span>");
-						$("#UserLeft").append('<a href="#" onclick="clipboard.lastE(this);return false;"><img class="nav-icon" src="images/document.svg" /></a>');
+						$("#UserLeft").append('<a href="#" onclick="clipboard.lastE(this);return false;"><img class="nav-icon" src="images/document.svg" style="height:1em; padding-top:0em;padding-bottom:0em;"/></a>');
 					}
 				}
 				
@@ -71,15 +69,37 @@ function showUser(sam){
 }
 
 function UnlockAccount(sam){
+	GetJSONData('/Users/Lockout','&sam='+sam)
+	.then(data => {
+		data = JSON.parse(data)
+		if (data = ''){
+			Stat('<span class="good">'+sam+' Unlocked</span> ');
+		}
+		else{
+			console.log("Unlock:" + data);	
+			}
+		  
+	});
 	
 }
 function showLockouts(){
 	GetJSONData('/Users/Lockout')
 	.then(data => {
 		data = JSON.parse(data)
-		console.log(data);
+		if (data.length == 0){
+			Stat('<span class="good">No Users are Locked Out</span> ');
+		}
+		else{
+			data.forEach(function(line){
+					  if (line != "" && !(line.includes('-----')) && !(line.includes('SamAccountName'))){
+					$("#LockedOutUsers").append('</br/> <a href="#" onclick="Users.showUser(\''+line.trim()+'\')">'+line.trim()+'</a> ');
+					unlockcode = ' <a href="#" onclick="Users.UnlockAccount(\''+line.trim()+'\')">Unlock</a>';
+					$("#LockedOutUsers").append(unlockcode);
+					  }
+			});	
+		}
 	});
 }
 
-module.exports = {test,showUser,UnlockAccount,showLockouts};
+module.exports = {showUser,UnlockAccount,showLockouts};
 

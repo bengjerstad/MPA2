@@ -48,8 +48,10 @@
 </div>
 
 <script>
-$("#main").load('main_modules\\Users.html');
-$("#UserPane").html("sss");
+$("#main").append('<div id="Users"></div>');
+$("#Users").load('main_modules\\Users.html');
+$("#main").append('<div id="KB"></div>')
+$("#KB").load('main_modules\\KB.html');
 </script>
 
 <!--
