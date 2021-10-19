@@ -76,7 +76,7 @@ function UnlockAccount(sam){
 			Stat('<span class="good">'+sam+' Unlocked</span> ');
 		}
 		else{
-			console.log("Unlock:" + data);	
+			console.log("Unlock: ." + data +".");	
 			}
 		  
 	});

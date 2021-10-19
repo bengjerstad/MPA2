@@ -32,6 +32,7 @@ async function GetJSONData(path,arg){
 }
 async function GetData(path,arg){
 	r = {}
+	console.log(path)
 	await $.ajax({type : 'GET',
 		url : "http://127.0.0.1:8000"+path+"?"+arg,
 		success : function(response) {
@@ -252,5 +253,22 @@ function clearallinputs(Section){
 clipboard['lastE'] =  function(x){
 	clipboard.writeText(x.previousSibling.innerText);
 }
-
-
+function ex(path){
+	
+	GetData('/run','program=ex&r='+path)
+	.then(data => {
+		console.log(data);
+	});
+}
+function python(path){
+	GetData('/run','program=python&r='+path)
+	.then(data => {
+		console.log(data);
+	});
+}
+function powershell(path){
+	GetData('/run','program=powershell&r='+path)
+	.then(data => {
+		console.log(data);
+	});
+}

@@ -99,7 +99,18 @@ async def KB(s:str='',f:str=''):
 		return html
 
 	
-#load KB data
+@app.get("/run")
+async def usersLockout(program:str='',r:str='',format:str='json'):
+	cmd = ''
+	if program == 'powershell':
+		cmd = 'powershell '+r
+	if program == 'ex':
+		cmd = 'explorer.exe '+r
+	if program == 'python':
+		cmd = 'python '+r
+	o = subprocess.run(cmd, capture_output=True)
+	data = o.stdout.decode("utf-8")
+	return rtformat(data,format,'cmdstring')
 
 
 @app.get("/Newusers")
