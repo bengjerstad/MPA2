@@ -1,9 +1,4 @@
-import os
-import subprocess
-import sys
-import colorama
-
-colorama.init(convert=True)
+import requests
 
 objectlist = []
 verblist = []
@@ -15,19 +10,28 @@ def setobject(key,val):
 	return objectlist
 
 # define verbs
-def r():
+def r(noun,adverb):
 	print('r')
 	
-def ping():
+def ping(noun):
 	print('ping')
 	
-def get():
+def get(noun):
 	print('get')
 	
-def unlock():
+def unlock(noun):
 	print('unlock')
 	
-verbs = {'ping':ping,'get':get,'unlock':unlock,'r':r}
+def find(noun):
+	if noun == 'locked':
+		r = requests.get('http://127.0.0.1:8000/Users/Lockout?format=json')
+		print(r.json())
+	else:
+		r = requests.get('http://127.0.0.1:8000/Users?format=json&s='+noun)
+		print(r.json())
+		
+	
+verbs = {'ping':ping,'get':get,'unlock':unlock,'r':r,'find':find}
 
 while 1:
 	sentence = input(">>")
@@ -65,7 +69,7 @@ while 1:
 	for object in objectlist:
 		#print(object)
 		if object['verb']:
-			print('Do '+object['verb']+':')
-			verbs[object['verb']]()
+			#print('Do '+object['verb']+':')
+			verbs[object['verb']](object['noun'])
 		
 	print(objectlist)

@@ -44,7 +44,7 @@ ADGroups = pd.read_csv(datapath+'ADGroups.csv')
 PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
 
 @app.get("/Users/Live")
-async def usersLockout(sam:str='',format:str='json'):
+async def usersLive(sam:str='',format:str='json'):
 	if sam != '':
 		cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"';
 		o = subprocess.run(cmd, capture_output=True)
@@ -100,7 +100,7 @@ async def KB(s:str='',f:str=''):
 
 	
 @app.get("/run")
-async def usersLockout(program:str='',r:str='',format:str='json'):
+async def run(program:str='',r:str='',format:str='json'):
 	cmd = ''
 	if program == 'powershell':
 		cmd = 'powershell '+r
