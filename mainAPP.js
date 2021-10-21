@@ -253,12 +253,10 @@ function clearallinputs(Section){
 clipboard['lastE'] =  function(x){
 	clipboard.writeText(x.previousSibling.innerText);
 }
+
+//shortcut functions for running external functions and scripts
 function ex(path){
-	
-	GetData('/run','program=ex&r='+path)
-	.then(data => {
-		console.log(data);
-	});
+	GetData('/run','program=ex&r='+path);
 }
 function python(path){
 	GetData('/run','program=python&r='+path)

@@ -72,8 +72,9 @@ function UnlockAccount(sam){
 	GetJSONData('/Users/Lockout','&sam='+sam)
 	.then(data => {
 		data = JSON.parse(data)
-		if (data = ''){
+		if (data == ''){
 			Stat('<span class="good">'+sam+' Unlocked</span> ');
+			showLockouts();
 		}
 		else{
 			console.log("Unlock: ." + data +".");	
@@ -87,6 +88,7 @@ function showLockouts(){
 	.then(data => {
 		data = JSON.parse(data)
 		if (data.length == 0){
+			$("#LockedOutUsers").html("")
 			Stat('<span class="good">No Users are Locked Out</span> ');
 		}
 		else{
