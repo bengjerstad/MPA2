@@ -40,8 +40,8 @@ async def users(s:str='',sam:str='',format:str='json'):
 #load user data
 ADUsers = pd.read_csv(datapath+'ADUsers.csv')
 ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
-ADGroups = pd.read_csv(datapath+'ADGroups.csv')
-PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
+#ADGroups = pd.read_csv(datapath+'ADGroups.csv')
+#PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
 
 @app.get("/Users/Live")
 async def usersLive(sam:str='',format:str='json'):
@@ -70,7 +70,7 @@ async def computers():
     return {"message": "computer"}
 	
 #load computer data
-Computers = pd.read_csv(datapath+'Computers.csv')	
+#Computers = pd.read_csv(datapath+'Computers.csv')	
 
 			#o = subprocess.run('SysinternalsSuite\\PsExec.exe \\\\' + noun + ' cmd /c "' + adverb1 + '"', capture_output=True)
 			#print(o.stderr.decode("utf-8"))
@@ -86,7 +86,7 @@ async def orders():
     return {"message": "Orders"}
 	
 #load Orders data	
-Orders = pd.read_csv(datapath+'Orders.csv')	
+#Orders = pd.read_csv(datapath+'Orders.csv')	
 	
 @app.get("/KB")
 async def KB(s:str='',f:str=''):
