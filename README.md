@@ -1,6 +1,6 @@
 # MPA2
 MPA - My Personal AdminConsole
-MPA combines tools and functions in a moduler way to help IT professionals complete routine tasks. 
+MPA combines tools and functions in a moduler way to help IT professionals complete routine tasks for windows PCs
 
 ## Target Goals
 MPA is built as a moduler as possible so that, as goals change, extra features can be incorprtated later. Each Module represents a certin set of goals, but is usally built around the functions of a data(CSV file,json or markdown files) and an API.
@@ -23,15 +23,24 @@ Use markdown for Knowlage base articles to create interactive procedures.
 
 
 ## Install
-1. Install Electron, fastapi and uvicorn
+1. Install NodeJS, Python3
+
+2. Install Electron, fastapi and uvicorn
 
 npm install electron --save-dev
 pip install fastapi
 pip install uvicorn[standard]
 
-2. Install other python modules
+3. Install other python modules
 ### json2html
 pip install json2html
+
+4. Additional tools per module:
+
+### User Module
+#### RSAT
+The user module revolves around accessing active directory. RSAT makes it easy to access AD from the command line.
+Get-WindowsCapability -Name RSAT* -Online | Add-WindowsCapability -Online
 
 ##Why 2
 MPA is a re-write of my MPA project to use FastAPI as the core logic and either MPAGui(electron) or python MPA.py as the front end. 
