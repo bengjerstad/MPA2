@@ -1,3 +1,7 @@
+GroupLists = {}
+GroupLists.ADGroups = [];
+GroupLists.EmailGroups = [];
+
 function showUser(sam){
 		$("#UserLeft").html("");
 		$("#UserRight").html("");
@@ -66,6 +70,8 @@ function showUser(sam){
 			});
 			
 		});
+	$("#UserRight").append('<div id="UserEmailGroups"><a href="#" onclick="Users.getemailgroups(\''+sam+'\');return false;">Get Email Groups</a></div>');
+	$("#UserRight").append('</br><div id="UserADGroups"><a href="#" onclick="Users.getadgroups(\''+sam+'\');return false;">Get AD Groups</a></div>');
 }
 
 function UnlockAccount(sam){
@@ -102,6 +108,25 @@ function showLockouts(){
 		}
 	});
 }
-
-module.exports = {showUser,UnlockAccount,showLockouts};
+function getemailgroups(sam){
+	GetJSONData('/Users/EmailGroups','&sam='+sam)
+	.then(data => {
+		data = JSON.parse(data)
+		console.log(data)
+		Users.GroupLists.EmailGroups = data
+		$("#UserEmailGroups").html("Email Groups:")
+		data.forEach(function(line){
+			$("#UserEmailGroups").append('</br>'+line.Mail);
+		});
+	});
+}
+function getadgroups(sam){
+	GetJSONData('/Users/ADGroups','&sam='+sam)
+	.then(data => {
+		//data = JSON.parse(data)
+		console.log(data)
+		$("#UserADGroups").append('</br>'+data);
+	});
+}
+module.exports = {showUser,UnlockAccount,showLockouts,getemailgroups,getadgroups,GroupLists};
 

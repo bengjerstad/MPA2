@@ -11,6 +11,7 @@ app = FastAPI()
 
 datapath = 'C:\\Users\\bgjerstad\\Documents\\Data\\'
 KBpath = 'C:\\Users\\bgjerstad\\Documents\\KB\\'
+agentusername = 'bgjerstad@lwcky.com'
 
 @app.get("/")
 async def root():
@@ -46,7 +47,7 @@ ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
 @app.get("/Users/Live")
 async def usersLive(sam:str='',format:str='json'):
 	if sam != '':
-		cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"';
+		cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		return rtformat(data,format,'kvstring')
@@ -55,16 +56,32 @@ async def usersLive(sam:str='',format:str='json'):
 @app.get("/Users/Lockout")
 async def usersLockout(s:str='',sam:str='',format:str='json'):
 	if sam == '':
-		cmd = 'powershell "Search-ADAccount -Locked | select SamAccountName"';
+		cmd = 'powershell "Search-ADAccount -Locked | select SamAccountName"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		return rtformat(data,format,'cmdstring')
 	if sam != '':
-		cmd = 'powershell "Unlock-ADAccount -Identity '+sam+'"';
+		cmd = 'powershell "Unlock-ADAccount -Identity '+sam+'"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		return rtformat(data,format,'cmdstring')
-	
+		
+@app.get("/Users/EmailGroups")
+async def usersEmailGroups(s:str='',sam:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell ".\\extra_modules\\GetMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return data
+
+@app.get("/Users/ADGroups")
+async def usersADGroups(s:str='',sam:str='',format:str='json'):
+	if sam != '':
+		cmd = cmd = 'powershell "Get-ADPrincipalGroupMembership '+sam+' | select name"';
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return data
+
 @app.get("/Computers")
 async def computers():
     return {"message": "computer"}
@@ -116,9 +133,7 @@ async def run(program:str='',r:str='',format:str='json'):
 @app.get("/Newusers")
 async def newusers():
     return {"message": "Newusers"}
-	
-#load NewUsers Data
-Markdowndatapath = 'C:\\Users\\bgjerstad\\Documents\\KB\\'
+
 
 def rtformat(input,formatout,formatin):
 	if formatin == "pd":
