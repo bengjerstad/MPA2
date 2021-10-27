@@ -1,5 +1,6 @@
-	//imports
+//imports
 window.$ = window.jQuery = require('././jquery-3.4.1.min.js');
+
 
 const exec = require('child_process').exec;
 const fs = require('fs');

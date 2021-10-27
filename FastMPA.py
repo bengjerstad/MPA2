@@ -41,6 +41,7 @@ async def users(s:str='',sam:str='',format:str='json'):
 #load user data
 ADUsers = pd.read_csv(datapath+'ADUsers.csv')
 ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
+NewUser = pd.read_csv(datapath+'NewUser.csv')
 #ADGroups = pd.read_csv(datapath+'ADGroups.csv')
 #PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
 
@@ -82,6 +83,14 @@ async def usersADGroups(s:str='',sam:str='',format:str='json'):
 		data = o.stdout.decode("utf-8")
 		return data
 
+@app.get("/Users/NewUser")
+async def usersNewUser(ticket:str='',format:str='json'):
+	if ticket == '':
+		return rtformat(NewUser,format,"pd")
+		
+	else:
+		return rtformat(NewUser[NewUser['Ticket'] == ticket],format,"pd")
+		
 @app.get("/Computers")
 async def computers():
     return {"message": "computer"}
