@@ -31,6 +31,24 @@ async function GetJSONData(path,arg){
 	})
 	return r;
 }
+async function PostJSONData(path,arg){
+	r = {}
+	await $.ajax({type : 'POST',
+		url : "http://127.0.0.1:8000"+path+"?format=json"+arg,
+		success : function(response) {
+			r = response;
+			//console.log(response);
+			return response;
+		},
+		error : function(xhr, status, error) {
+			//var err = eval("(" + xhr.responseText + ")");
+			console.log(xhr);
+			//Stat('Error: '+err);
+			throw err; 
+		}
+	})
+	return r;
+}
 async function GetData(path,arg){
 	r = {}
 	console.log(path)
@@ -267,6 +285,12 @@ function python(path){
 }
 function powershell(path){
 	GetData('/run','program=powershell&r='+path)
+	.then(data => {
+		console.log(data);
+	});
+}
+function cmd(path){
+	GetData('/run','program=cmd&r='+path)
 	.then(data => {
 		console.log(data);
 	});

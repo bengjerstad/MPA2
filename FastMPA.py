@@ -53,7 +53,22 @@ async def usersLive(sam:str='',format:str='json'):
 		data = o.stdout.decode("utf-8")
 		return rtformat(data,format,'kvstring')
 		
-
+@app.get("/Users/Attribs")
+async def usersAttribsGet(sam:str='',what:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell -command "Get-ADUser -Identity '+sam+' -Properties '+what+' | Select-Object -ExpandProperty '+what+'"';
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return rtformat(data,format,'cmdstring')
+		
+@app.post("/Users/Attribs")
+async def usersAttribsSet(sam:str='',what:str='',val:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell -command "Set-ADUser '+sam+' -Add @{\''+what+'\'=\''+val+'\'}"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return rtformat(data,format,'cmdstring')
+		
 @app.get("/Users/Lockout")
 async def usersLockout(s:str='',sam:str='',format:str='json'):
 	if sam == '':
@@ -102,6 +117,7 @@ async def computers():
 			#print(o.stderr.decode("utf-8"))
 	
 
+
 @app.get("/Tickets")
 async def tickets():
     return {"message": "Tickets"}
@@ -134,14 +150,12 @@ async def run(program:str='',r:str='',format:str='json'):
 		cmd = 'explorer.exe '+r
 	if program == 'python':
 		cmd = 'python '+r
+	if program == 'cmd':
+		cmd = 'cmd /c "'+r+'"'
 	o = subprocess.run(cmd, capture_output=True)
 	data = o.stdout.decode("utf-8")
+	print(data)
 	return rtformat(data,format,'cmdstring')
-
-
-@app.get("/Newusers")
-async def newusers():
-    return {"message": "Newusers"}
 
 
 def rtformat(input,formatout,formatin):
