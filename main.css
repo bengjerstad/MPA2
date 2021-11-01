@@ -138,7 +138,7 @@ float:top;
  
   right: 0;
   bottom: 0;}
-form, table {
+form {
      display:inline;
      margin:0px;
      padding:0px;

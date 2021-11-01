@@ -70,7 +70,7 @@ function showUser(sam){
 			});
 			
 		});
-	$("#UserRight").append('<div id="UserEmailGroups"><a href="#" onclick="Users.getemailgroups(\''+sam+'\');return false;">Get Email Groups</a></div>');
+	$("#UserRight").append('<div id="UserEmailGroups"><a href="#" onclick="Users.getemailgroups(\''+sam+'\',\'UserEmailGroups\');return false;">Get Email Groups</a></div>');
 	$("#UserRight").append('</br><div id="UserADGroups"><a href="#" onclick="Users.getadgroups(\''+sam+'\');return false;">Get AD Groups</a></div>');
 }
 
@@ -108,16 +108,34 @@ function showLockouts(){
 		}
 	});
 }
-function getemailgroups(sam){
+function getemailgroups(sam,appendid){
 	GetJSONData('/Users/EmailGroups','&sam='+sam)
 	.then(data => {
-		data = JSON.parse(data)
-		console.log(data)
-		Users.GroupLists.EmailGroups = data
-		$("#UserEmailGroups").html("Email Groups:")
-		data.forEach(function(line){
-			$("#UserEmailGroups").append('</br>'+line.Mail);
-		});
+		if (data){
+			data = JSON.parse(data)
+			console.log(data)
+			Users.GroupLists.EmailGroups = data
+			$("#"+appendid).html("Email Groups:")
+			data.forEach(function(line){
+				$("#"+appendid).append('</br>'+line.Mail);
+			});
+		}
+		else{console.log("No Data")}
+	});
+}
+function removeemailgroups(sam,appendid){
+	DeleteJSONData('/Users/EmailGroups','&sam='+sam)
+	.then(data => {
+		if (data){
+			data = JSON.parse(data)
+			console.log(data)
+			Users.GroupLists.EmailGroups = data
+			$("#"+appendid).html("Email Groups:")
+			data.forEach(function(line){
+				$("#"+appendid).append('</br>'+line.Mail);
+			});
+		}
+		else{console.log("No Data")}
 	});
 }
 function getadgroups(sam){
@@ -128,5 +146,5 @@ function getadgroups(sam){
 		$("#UserADGroups").append('</br>'+data);
 	});
 }
-module.exports = {showUser,UnlockAccount,showLockouts,getemailgroups,getadgroups,GroupLists};
+module.exports = {showUser,UnlockAccount,showLockouts,getemailgroups,getadgroups,removeemailgroups,GroupLists};
 

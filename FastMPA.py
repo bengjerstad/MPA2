@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import pandas as pd
+import numpy as np
 from json2html import *
 import json
 import os
@@ -42,6 +43,7 @@ async def users(s:str='',sam:str='',format:str='json'):
 ADUsers = pd.read_csv(datapath+'ADUsers.csv')
 ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
 NewUser = pd.read_csv(datapath+'NewUser.csv')
+NewUser['Ticket'] = NewUser['Ticket'].astype(str)
 #ADGroups = pd.read_csv(datapath+'ADGroups.csv')
 #PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
 
@@ -83,26 +85,35 @@ async def usersLockout(s:str='',sam:str='',format:str='json'):
 		return rtformat(data,format,'cmdstring')
 		
 @app.get("/Users/EmailGroups")
-async def usersEmailGroups(s:str='',sam:str='',format:str='json'):
+async def usersEmailGroups(sam:str='',format:str='json'):
 	if sam != '':
 		cmd = 'powershell ".\\extra_modules\\GetMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		return data
-
+		
+@app.delete("/Users/EmailGroups")
+async def usersEmailGroups(sam:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell ".\\extra_modules\\RemoveMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return data
+		
 @app.get("/Users/ADGroups")
 async def usersADGroups(s:str='',sam:str='',format:str='json'):
 	if sam != '':
 		cmd = cmd = 'powershell "Get-ADPrincipalGroupMembership '+sam+' | select name"';
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
+		err = o.stderr.decode("utf-8")
+		print("Error: ",err)
 		return data
 
 @app.get("/Users/NewUser")
 async def usersNewUser(ticket:str='',format:str='json'):
 	if ticket == '':
 		return rtformat(NewUser,format,"pd")
-		
 	else:
 		return rtformat(NewUser[NewUser['Ticket'] == ticket],format,"pd")
 		
@@ -154,6 +165,8 @@ async def run(program:str='',r:str='',format:str='json'):
 		cmd = 'cmd /c "'+r+'"'
 	o = subprocess.run(cmd, capture_output=True)
 	data = o.stdout.decode("utf-8")
+	err = o.stderr.decode("utf-8")
+	print("error: ",err)
 	print(data)
 	return rtformat(data,format,'cmdstring')
 
