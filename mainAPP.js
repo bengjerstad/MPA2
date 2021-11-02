@@ -232,10 +232,10 @@ function ClickFirstOption(){
 }
 //  Stat Functions
 function Stat(msg){
-	today = new Date();
-	logmsg = msg+' '+today.toLocaleTimeString()+"\r\n";
-	//fs.appendFile('statlog.log', logmsg, function (err) {if (err) {console.log(err)}});	 
 	$("#tasklog").prepend("<br/>"+msg);
+}
+function log(msg,context){
+	$("#tasklog").prepend(msg+'<span style="font-size:.8em">('+context+')</span>');
 }
 function MaxStat(){ 
 	fs.readFile('statlog.log', function (err,statloglines) {

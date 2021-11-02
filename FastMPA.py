@@ -48,12 +48,16 @@ NewUser['Ticket'] = NewUser['Ticket'].astype(str)
 #PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
 
 @app.get("/Users/Live")
-async def usersLive(sam:str='',format:str='json'):
+async def usersLive(sam:str='',detailed:str='',format:str='json'):
 	if sam != '':
-		cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"'
+		if detailed == '':
+			cmd = 'powershell ".\\extra_modules\\GetADUser.ps1" "-sam '+sam+'"'
+		else:
+			cmd = 'powershell ".\\extra_modules\\GetADUserDetailed.ps1" "-sam '+sam+'"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		return rtformat(data,format,'kvstring')
+
 		
 @app.get("/Users/Attribs")
 async def usersAttribsGet(sam:str='',what:str='',format:str='json'):
@@ -116,6 +120,14 @@ async def getusersNewUser(ticket:str='',format:str='json'):
 		return rtformat(NewUser,format,"pd")
 	else:
 		return rtformat(NewUser[NewUser['Ticket'] == ticket],format,"pd")
+		
+@app.post("/Users/NewUser")
+async def postusersNewUser(ticket:str='',key:str='',val:str='',format:str='json'):
+	global NewUser
+	if ticket != '':
+		NewUser.loc[NewUser.Ticket == ticket, key] = val
+		NewUser.to_csv(datapath+'NewUser.csv',index=False)
+		return rtformat(NewUser[NewUser['Ticket'] == ticket],format,"pd")
 
 @app.put("/Users/NewUser")
 async def putusersNewUser(ticket:str='',format:str='json'):
@@ -125,8 +137,13 @@ async def putusersNewUser(ticket:str='',format:str='json'):
 		NewUserModified['Ticket'].iloc[-1] = str(int(NewUser['Ticket'].iloc[-1])+1)
 		NewUser = NewUserModified
 		NewUserModified.to_csv(datapath+'NewUser.csv',index=False)
+	if ticket != '':
+		NewUserModified = NewUser.append(pd.Series(),ignore_index=True)
+		NewUserModified['Ticket'].iloc[-1] = ticket
+		NewUser = NewUserModified
+		NewUserModified.to_csv(datapath+'NewUser.csv',index=False)
 		
-		return rtformat(NewUserModified.tail(1),format,"pd")
+	return rtformat(NewUserModified.tail(1),format,"pd")
 
 		
 @app.get("/Computers")
