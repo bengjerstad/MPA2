@@ -111,11 +111,23 @@ async def usersADGroups(s:str='',sam:str='',format:str='json'):
 		return data
 
 @app.get("/Users/NewUser")
-async def usersNewUser(ticket:str='',format:str='json'):
+async def getusersNewUser(ticket:str='',format:str='json'):
 	if ticket == '':
 		return rtformat(NewUser,format,"pd")
 	else:
 		return rtformat(NewUser[NewUser['Ticket'] == ticket],format,"pd")
+
+@app.put("/Users/NewUser")
+async def putusersNewUser(ticket:str='',format:str='json'):
+	global NewUser
+	if ticket == '':
+		NewUserModified = NewUser.append(pd.Series(),ignore_index=True)
+		NewUserModified['Ticket'].iloc[-1] = str(int(NewUser['Ticket'].iloc[-1])+1)
+		NewUser = NewUserModified
+		NewUserModified.to_csv(datapath+'NewUser.csv',index=False)
+		
+		return rtformat(NewUserModified.tail(1),format,"pd")
+
 		
 @app.get("/Computers")
 async def computers():

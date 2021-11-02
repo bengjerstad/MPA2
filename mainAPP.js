@@ -67,6 +67,24 @@ async function DeleteJSONData(path,arg){
 	})
 	return r;
 }
+async function PutJSONData(path,arg){
+	r = {}
+	await $.ajax({type : 'PUT',
+		url : "http://127.0.0.1:8000"+path+"?format=json"+arg,
+		success : function(response) {
+			r = response;
+			//console.log(response);
+			return response;
+		},
+		error : function(xhr, status, error) {
+			//var err = eval("(" + xhr.responseText + ")");
+			console.log(xhr);
+			//Stat('Error: '+err);
+			throw err; 
+		}
+	})
+	return r;
+}
 async function GetData(path,arg){
 	r = {}
 	console.log(path)
