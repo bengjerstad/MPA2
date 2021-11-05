@@ -71,7 +71,9 @@ function showUser(sam){
 			
 		});
 	$("#UserRight").append('<div id="UserEmailGroups"><a href="#" onclick="Users.getemailgroups(\''+sam+'\',\'UserEmailGroups\');return false;">Get Email Groups</a></div>');
-	$("#UserRight").append('</br><div id="UserADGroups"><a href="#" onclick="Users.getadgroups(\''+sam+'\');return false;">Get AD Groups</a></div>');
+	$("#UserRight").append('</br><a href="#" onclick="Users.getadgroups(\''+sam+'\',\'UserADGroups\');return false;">Get AD Groups</a><div id="UserADGroups"></div>');
+	$("#UserRight").append('</br><a href="#" onclick="Users.getLicense(\''+sam+'\');return false;">Get License</a><div id="UserLicense"></div>');
+	$("#UserRight").append('</br><a href="#" onclick="Users.getMFA(\''+sam+'\');return false;">Get MFA</a><div id="UserMFA"></div>');
 }
 
 function UnlockAccount(sam){
@@ -129,7 +131,6 @@ function removeemailgroups(sam,appendid){
 		if (data){
 			data = JSON.parse(data)
 			console.log(data)
-			Users.GroupLists.EmailGroups = data
 			$("#"+appendid).html("Email Groups:")
 			data.forEach(function(line){
 				$("#"+appendid).append('</br>'+line.Mail);
@@ -138,13 +139,38 @@ function removeemailgroups(sam,appendid){
 		else{console.log("No Data")}
 	});
 }
-function getadgroups(sam){
+function getadgroups(sam,appendid){
 	GetJSONData('/Users/ADGroups','&sam='+sam)
+	.then(data => {
+		data = JSON.parse(data)
+		d = []
+		d[0] = sam
+		data.forEach(function(line){
+			if (line != "" && !(line.includes('----')) && !(line.includes('name'))){
+				$("#"+appendid).append('</br>'+line.trim());
+				d.push(line.trim())
+			}
+		});
+		Users.GroupLists.ADGroups = d
+		console.log(d)
+	});
+}
+function getLicense(sam){
+	GetJSONData('/Users/Licenses','&upn='+sam+'@lwcky.com')
 	.then(data => {
 		//data = JSON.parse(data)
 		console.log(data)
-		$("#UserADGroups").append('</br>'+data);
+		log('Licenses: '+data,'user');
+		$("#UserLicense").html('</br>'+data);
 	});
 }
-module.exports = {showUser,UnlockAccount,showLockouts,getemailgroups,getadgroups,removeemailgroups,GroupLists};
+function getMFA(sam){
+	GetJSONData('/Users/MFA','&upn='+sam+'@lwcky.com')
+	.then(data => {
+		//data = JSON.parse(data)
+		console.log(data)
+		$("#UserMFA").html('</br>'+data);
+	});
+}
+module.exports = {showUser,UnlockAccount,showLockouts,getemailgroups,getadgroups,removeemailgroups,GroupLists,getLicense,getMFA};
 

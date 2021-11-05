@@ -103,17 +103,67 @@ async def usersEmailGroups(sam:str='',format:str='json'):
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		return data
+	
+@app.get("/Users/Licenses")
+async def usersLicenses(upn:str='',format:str='json'):
+	if upn != '':
+		cmd = 'powershell ".\\extra_modules\\CheckLicenses.ps1" "-upn '+upn+'" "-agentusername '+agentusername+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		err = o.stderr.decode("utf-8")
+		print(err)
+		data = o.stdout.decode("utf-8")
+		return data	
 		
+@app.post("/Users/Licenses")
+async def usersLicenses(upn:str='',licenses:str='',format:str='json'):
+	if upn != '':
+		cmd = 'powershell ".\\extra_modules\\SetLicenses.ps1" "-upn '+upn+'" "-agentusername '+agentusername+' -licenses '+licenses+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		err = o.stderr.decode("utf-8")
+		print(err)
+		print(data)
+		return data	
+		
+@app.get("/Users/MFA")
+async def usersMFA(upn:str='',format:str='json'):
+	if upn != '':
+		cmd = 'powershell ".\\extra_modules\\CheckMFA.ps1" "-upn '+upn+'" "-agentusername '+agentusername+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		err = o.stderr.decode("utf-8")
+		print(err)
+		return data	
+
+@app.post("/Users/MFA")
+async def usersMFA(upn:str='',format:str='json'):
+	if upn != '':
+		cmd = 'powershell ".\\extra_modules\\SetMFA.ps1" "-upn '+upn+'" "-agentusername '+agentusername+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return data	
+
+
 @app.get("/Users/ADGroups")
-async def usersADGroups(s:str='',sam:str='',format:str='json'):
+async def usersADGroups(sam:str='',format:str='json'):
 	if sam != '':
-		cmd = cmd = 'powershell "Get-ADPrincipalGroupMembership '+sam+' | select name"';
+		cmd = 'powershell "Get-ADPrincipalGroupMembership '+sam+' | select name"';
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
 		err = o.stderr.decode("utf-8")
 		print("Error: ",err)
-		return data
-
+		return rtformat(data,format,'cmdstring')
+		
+@app.post("/Users/ADGroups")
+async def usersADGroups(sam:str='',group:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell "Add-ADGroupMember -Identity \''+group+'\' -Members '+sam+'"';
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		err = o.stderr.decode("utf-8")
+		print("Error: ",err)
+		return rtformat(data,format,'cmdstring')
+		
 @app.get("/Users/NewUser")
 async def getusersNewUser(ticket:str='',format:str='json'):
 	if ticket == '':
