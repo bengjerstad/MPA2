@@ -2,6 +2,13 @@ GroupLists = {}
 GroupLists.ADGroups = [];
 GroupLists.EmailGroups = [];
 
+function RefreshData(){
+	PostJSONData('/Users/','&s=refresh')
+	.then(data => {
+		data = JSON.parse(data)
+		log(data,'User')
+	});
+}
 function showUser(sam){
 		$("#UserLeft").html("");
 		$("#UserRight").html("");
@@ -125,6 +132,17 @@ function getemailgroups(sam,appendid){
 		else{console.log("No Data")}
 	});
 }
+function setemailgroup(sam,emailgroup){
+	PostJSONData('/Users/EmailGroups','&sam='+sam+'&emailgroup='+emailgroup+'')
+	.then(data => {
+		if (data){
+			data = JSON.parse(data)
+			console.log(data)
+			log(data,'User')
+		}
+		else{console.log("No Data")}
+	});
+}
 function removeemailgroups(sam,appendid){
 	DeleteJSONData('/Users/EmailGroups','&sam='+sam)
 	.then(data => {
@@ -172,5 +190,5 @@ function getMFA(sam){
 		$("#UserMFA").html('</br>'+data);
 	});
 }
-module.exports = {showUser,UnlockAccount,showLockouts,getemailgroups,getadgroups,removeemailgroups,GroupLists,getLicense,getMFA};
+module.exports = {RefreshData,showUser,UnlockAccount,showLockouts,getemailgroups,setemailgroup,getadgroups,removeemailgroups,GroupLists,getLicense,getMFA};
 

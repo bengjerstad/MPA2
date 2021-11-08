@@ -38,7 +38,7 @@ async def users(s:str='',sam:str='',format:str='json'):
 		sam = sam.lower()
 		searchr0 = ADUsers[ADUsers.sam == sam]
 		return searchr0.to_json(orient="records")
-	
+			
 #load user data
 ADUsers = pd.read_csv(datapath+'ADUsers.csv')
 ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
@@ -46,6 +46,17 @@ NewUser = pd.read_csv(datapath+'NewUser.csv')
 NewUser['Ticket'] = NewUser['Ticket'].astype(str)
 #ADGroups = pd.read_csv(datapath+'ADGroups.csv')
 #PhoneNumbers = pd.read_csv(datapath+'PhoneNumbers.csv')
+
+@app.post("/Users")
+async def users(s:str='',format:str='json'):
+	global ADUsers
+	if s == 'refresh':
+		cmd = 'powershell ".\\extra_modules\\GetADUsers.ps1"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		ADUsers = pd.read_csv(datapath+'ADUsers.csv')
+		ADUsers['sam'] = ADUsers.SamAccountName.str.lower()
+		return rtformat(data,format,'cmdstring')
 
 @app.get("/Users/Live")
 async def usersLive(sam:str='',detailed:str='',format:str='json'):
@@ -96,6 +107,14 @@ async def usersEmailGroups(sam:str='',format:str='json'):
 		data = o.stdout.decode("utf-8")
 		return data
 		
+@app.post("/Users/EmailGroups")
+async def usersEmailGroups(sam:str='',emailgroup:str='',format:str='json'):
+	if sam != '':
+		cmd = 'powershell ".\\extra_modules\\SetMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'" "-groupname '+emailgroup+'"'
+		o = subprocess.run(cmd, capture_output=True)
+		data = o.stdout.decode("utf-8")
+		return data
+		
 @app.delete("/Users/EmailGroups")
 async def usersEmailGroups(sam:str='',format:str='json'):
 	if sam != '':
@@ -122,7 +141,6 @@ async def usersLicenses(upn:str='',licenses:str='',format:str='json'):
 		data = o.stdout.decode("utf-8")
 		err = o.stderr.decode("utf-8")
 		print(err)
-		print(data)
 		return data	
 		
 @app.get("/Users/MFA")
@@ -160,9 +178,13 @@ async def usersADGroups(sam:str='',group:str='',format:str='json'):
 		cmd = 'powershell "Add-ADGroupMember -Identity \''+group+'\' -Members '+sam+'"';
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
+		if data == '':
+			return rtformat(group,format,'cmdstring')
+		else:
+			return rtformat(data,format,'cmdstring')
 		err = o.stderr.decode("utf-8")
 		print("Error: ",err)
-		return rtformat(data,format,'cmdstring')
+		
 		
 @app.get("/Users/NewUser")
 async def getusersNewUser(ticket:str='',format:str='json'):
