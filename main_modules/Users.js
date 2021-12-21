@@ -143,6 +143,17 @@ function setemailgroup(sam,emailgroup){
 		else{console.log("No Data")}
 	});
 }
+function setemailgroups(sam,emailgroups){
+	PostJSONData('/Users/EmailGroups','&sam='+sam+'&emailgroups='+emailgroups+'')
+	.then(data => {
+		if (data){
+			//data = JSON.parse(data)
+			console.log(data)
+			//log(data,'User')
+		}
+		else{console.log("No Data")}
+	});
+}
 function removeemailgroups(sam,appendid){
 	DeleteJSONData('/Users/EmailGroups','&sam='+sam)
 	.then(data => {
@@ -190,5 +201,5 @@ function getMFA(sam){
 		$("#UserMFA").html('</br>'+data);
 	});
 }
-module.exports = {RefreshData,showUser,UnlockAccount,showLockouts,getemailgroups,setemailgroup,getadgroups,removeemailgroups,GroupLists,getLicense,getMFA};
+module.exports = {RefreshData,showUser,UnlockAccount,showLockouts,getemailgroups,setemailgroup,setemailgroups,getadgroups,removeemailgroups,GroupLists,getLicense,getMFA};
 

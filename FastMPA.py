@@ -19,7 +19,7 @@ async def root():
     return {"message": "Hello World"}
 	
 @app.get("/Users")
-async def users(s:str='',sam:str='',format:str='json'):
+async def users(s:str='',sam:str='',enabled:str='',format:str='json'):
 	if s == '' and sam == '':
 		return rtformat(ADUsers[['SamAccountName','displayName']],format,"pd")
 	if s != '':
@@ -27,8 +27,11 @@ async def users(s:str='',sam:str='',format:str='json'):
 		searchr1 = ADUsers[ADUsers.displayName.str.lower().str.contains(s, na=False)]
 		searchr2 = ADUsers[ADUsers.telephoneNumber.str.lower().str.contains(s, na=False)]
 		concatsearch = pd.concat([searchr0,searchr1,searchr2])[['SamAccountName','displayName','Enabled','distinguishedname']].drop_duplicates()
-		#hide inactive accounts
-		concatsearch = concatsearch[concatsearch['Enabled'] == True]
+		if enabled == '' or enabled == '0':
+			#hide inactive accounts
+			concatsearch = concatsearch[concatsearch['Enabled'] == True]
+
+		
 		#filter on distinguishedname
 		concatsearch = concatsearch[concatsearch['distinguishedname'].str.contains("OU=LWC")]
 		concatsearch = concatsearch[~concatsearch['distinguishedname'].str.contains("ADMIN UTILITY")]
@@ -105,15 +108,23 @@ async def usersEmailGroups(sam:str='',format:str='json'):
 		cmd = 'powershell ".\\extra_modules\\GetMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
+		err = o.stderr.decode("utf-8")
+		print(err)
 		return data
 		
 @app.post("/Users/EmailGroups")
-async def usersEmailGroups(sam:str='',emailgroup:str='',format:str='json'):
+async def usersEmailGroups(sam:str='',emailgroup:str='',emailgroups:str='',format:str='json'):
 	if sam != '':
-		cmd = 'powershell ".\\extra_modules\\SetMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'" "-groupname '+emailgroup+'"'
+		if emailgroup != '':
+			cmd = 'powershell ".\\extra_modules\\SetMailGroups.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'" "-groupname '+emailgroup+'"'
+		if emailgroups != '':
+			cmd = 'powershell ".\\extra_modules\\SetMailGroups2.ps1" "-sam '+sam+'" "-agentusername '+agentusername+'" "-groupnames '+emailgroups+'"'
 		o = subprocess.run(cmd, capture_output=True)
 		data = o.stdout.decode("utf-8")
+		err = o.stderr.decode("utf-8")
+		print(err)
 		return data
+		
 		
 @app.delete("/Users/EmailGroups")
 async def usersEmailGroups(sam:str='',format:str='json'):

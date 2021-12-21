@@ -178,9 +178,8 @@ function searchData(){
 		CurrentData = $("#SearchData").val();
 		
 		//var lastvar = '';
-		
 		//users search
-		GetJSONData('/Users','&s='+search)
+		GetJSONData('/Users','&s='+search+'&enabled='+AdvSDisabled)
 		.then(data => {
 			data = JSON.parse(data);
 			//console.log(data)
